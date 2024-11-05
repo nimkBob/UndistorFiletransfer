@@ -25,6 +25,7 @@ class Sql{
     else{
         $conn->close();
         return true;
+
     }
   }
 
