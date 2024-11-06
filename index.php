@@ -1,5 +1,4 @@
 <?php
-1
 /* if($_SERVER['REQUEST_METHOD']=='POST')
   $featureType=$_POST['featureType'];
   switch($featureType){
