@@ -2,9 +2,9 @@
 class Sql {
     // 数据库连接信息
     private $servername = "localhost";
-    private $username = "your_username";
-    private $password = "your_password";
-    private $dbname = "your_database";
+    private $username = "ser0ulatqxpkoxv";
+    private $password = "SAexP4Tc00";
+    private $dbname = "ser0ulatqxpkoxv";
     private $conn;
 
     /**
@@ -37,7 +37,7 @@ class Sql {
      * @param string $table 表名
      * @return bool 如果值存在返回true，不存在返回false
      */
-    public function valueExistsInColumn($value, $columnName, $table) {
+    public function checkExistence($value, $columnName, $table) {
         // 使用预处理语句防止SQL注入
         $sql = "SELECT COUNT(*) as count FROM " . $this->conn->real_escape_string($table) . 
                " WHERE " . $this->conn->real_escape_string($columnName) . " = ?";
@@ -64,39 +64,17 @@ class Sql {
     }
 
 
-    
-    function getRowValuesByUserName($tableName, $columnName, $userName) {
-      // 假设 $this->conn 是已经建立好的数据库连接
-      $conn = $this->conn;
-  
-      // 构建SQL查询语句
-      $sql = "SELECT * FROM $tableName WHERE $columnName = ?";
-      
-      // 预处理SQL语句
-      $stmt = $conn->prepare($sql);
-  
-      // 绑定参数
-      $stmt->bind_param("s", $userName);
-  
-      // 执行查询
-      $stmt->execute();
-  
-      // 获取结果
-      $result = $stmt->get_result();
-  
-      // 检查是否有结果
-      if ($result->num_rows > 0) {
-          // 获取指定行的数据
-          $row = $result->fetch_assoc();
-          return $row;
-      } else {
-          return null; // 没有找到匹配的行
-      }
-  
-      // 关闭预处理语句
-      $stmt->close();
-  }
+ public function checkEquality($testValue,$columnName,$noun,$noumName,$table) {
+   $sql = 'SELECT '.$columnName.' FROM '.$table.' WHERE '.$noumName.'='.$noun;
+   $result = $this->conn->query($sql);
+   $row = $result->fetch_assoc();
+   if($row[$columnName]==$testValue){
+       return true;
+   }
+   else{
+       return false;
+   }
 }
 
-
+}
 ?>

@@ -1,7 +1,6 @@
 <?php
-include '/feature/Sign-up.php';
-feedback("cao");
-/* if($_SERVER['REQUEST_METHOD']=='POST')
+include 'feature/feedback.php';
+if($_SERVER['REQUEST_METHOD']=='POST')
   $featureType=$_POST['featureType'];
   switch($featureType){
     case "Login":
@@ -24,5 +23,4 @@ feedback("cao");
     echo json_encode($feedback);
      break;
     }
-*/
 ?>
