@@ -15,15 +15,15 @@ function login($username,$password,$hintbotten){
 
   include "Mysql.php";
   $feedbackvulae=new Sql();
-
   if($feedbackvulae->checkEquality($password,'password',$username,'username','user')){
-    if($hintbotten=="true"){
-    feedback("success:Login-successful");
+    if($hintbotten==true){
+    feedback("success:登入成功");
     }
-    exit;
+    $feedbackvulae->getUserinformation($username,$password);
+    return true;
   }else{
-    feedback("error:Incorrect-password");
-    exit;
+    feedback("error:登入失败");
+    exit();
   }
 }
 

@@ -6,8 +6,8 @@ if($_SERVER['REQUEST_METHOD']=='POST')
     case "Login":
      include '/feature/Login.php';
      break;
-    case "Sign-up":
-     include '/feature/Sign-up.php';
+    case "Signup":
+     include '/feature/Signup.php';
      break;
     case "File-operation":
      include '/feature/File-operation.php';

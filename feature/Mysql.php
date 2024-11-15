@@ -76,5 +76,53 @@ class Sql {
    }
 }
 
+ public function checkFloderDownloadPower($targetId,$userId) {
+   //检验用户是否有在该文件夹中上传的权限
+   $sql = 'SELECT users,admins FROM Fdate WHERE id='.$targetId;
+   $stmt = $this->conn->prepare($sql);
+   if (!$stmt) {
+    throw new Exception("Prepare failed: ". $this->conn->error);
+}
+    $stmt->bind_param('s', $targetId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $splitArray = explode(';',$row['users']);
+    $splitArray2 = explode(';',$row['admins']);
+    for($i=0;$i<count($splitArray);$i++){
+      if($splitArray[$i]==$userId){
+        for($j=0;$j<count($splitArray2);$j++){
+          if($splitArray2[$j]==$userId){
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+}
+public function  adduser($userinformation){
+    //构建 sql 插入用户信息语句
+    $sql="INSERT INTO user"." (username,password,name,main,membars,teams,teamposltion,friends,activity)"."VALUES"."("; 
+    for($i=0;$i<9;$i++){
+    $sql=$sql.$userinformation[$i].",";
+    }
+    $sql=$sql.")";
+    //执行语句反馈结果    
+    if($this->conn->query($sql)===TRUE){
+      return true;
+    }else{
+     return false;
+    }
+}
+ public function getUserinformation($username,$password){
+    $sql= 'SELECT * FROM user WHERE username='.$username.'AND password='.$password;
+    $stmt = $this->conn->prepare($sql);   
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $GLOBALS['user'][]=$row;
+}
+
+ public function addFate(){}
 }
 ?>
