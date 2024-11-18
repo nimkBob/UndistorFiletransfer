@@ -1,31 +1,30 @@
 <?php
-       function posst(){
-         
-         include 'Check.php';
-         include 'Mysql.php';
-         include 'User.php';
-         include 'Feedback.php';
+function post($data) {
+    // 抑制包含文件时的错误输出
+    @include 'Check.php';
+    @include 'Mysql.php';
+    @include 'User.php';
+   $userInfo = [
+        $data['username'],
+        $data['password'],
+        $data['name'],
+        $data['main'],
+        $data['membars'],
+        $data['usertype'],
+    ];
+    // 检查用户名和密码的合法性
+   if (!(validate($userInfo[0], 20, 6)  && validate($userInfo[1], 20, 10))) {
+        exit();  
+    }
+    $user = new User;
+    $user->setSignup($userInfo);
+    $num = $user->getSginuserinformation();
+    $mysqlHandler = new Sql;
+    if ($mysqlHandler->adduser($num)) {
+        feedback('success: 注册成功');
+    } else {
+        feedback('error:注册失败'); 
+    }
+}
+?>
 
-         $user = new User();
-         $userinformation=[
-           $_POST['username'],
-           $_POST['password'],
-           $_POST['name'],
-           $_POST['main'],
-           $_POST['membars']
-          ];
-
-        if(!(validate($userinformation[0],20,6) and validate($userinformation[1],20,12))){
-          feedback("error:输入不合法");
-          exit();  
-         }
-
-        $user->setSignup($userinformation);
-        $num=$user->getuserinformation();
-        $userw= new Sql;
-        if($userw->adduser($num)==true){
-          feedback("success:注册成功");
-          exit();
-        }        
-      }
-    ?>

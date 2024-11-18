@@ -16,7 +16,7 @@ class Sql {
         
         // 检查连接是否成功
         if ($this->conn->connect_error) {
-            throw new Exception("Connection failed: " . $this->conn->connect_error);
+            
         }
     }
 
@@ -37,6 +37,8 @@ class Sql {
      * @param string $table 表名
      * @return bool 如果值存在返回true，不存在返回false
      */
+
+
     public function checkExistence($value, $columnName, $table) {
         // 使用预处理语句防止SQL注入
         $sql = "SELECT COUNT(*) as count FROM " . $this->conn->real_escape_string($table) . 
@@ -44,9 +46,6 @@ class Sql {
         
         // 准备SQL语句
         $stmt = $this->conn->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Prepare failed: " . $this->conn->error);
-        }
         
         // 绑定参数并执行
         $stmt->bind_param("s", $value);
@@ -64,16 +63,27 @@ class Sql {
     }
 
 
- public function checkEquality($testValue,$columnName,$noun,$noumName,$table) {
-   $sql = 'SELECT '.$columnName.' FROM '.$table.' WHERE '.$noumName.'='.$noun;
-   $result = $this->conn->query($sql);
-   $row = $result->fetch_assoc();
-   if($row[$columnName]==$testValue){
-       return true;
-   }
-   else{
-       return false;
-   }
+public function checkEquality($testValue, $columnName, $noun, $noumName, $table) {
+    // 准备SQL语句
+    $stmt = $this->conn->prepare("SELECT $columnName FROM $table WHERE $noumName = ?");
+    
+    // 绑定字符串参数
+    $stmt->bind_param('s', $noun);
+
+    // 执行查询
+    $stmt->execute();
+
+    // 获取结果集
+    $result = $stmt->get_result();
+  
+    // 检查结果
+    if ($result) {
+        $row = $result->fetch_assoc();
+        if ($row && isset($row[$columnName]) && $row[$columnName] == $testValue) {
+            return true;          
+    }
+    }
+    return false;
 }
 
  public function checkFloderDownloadPower($targetId,$userId) {
@@ -100,27 +110,107 @@ class Sql {
     }
     return false;
 }
-public function  adduser($userinformation){
-    //构建 sql 插入用户信息语句
-    $sql="INSERT INTO user"." (username,password,name,main,membars,teams,teamposltion,friends,activity)"."VALUES"."("; 
-    for($i=0;$i<9;$i++){
-    $sql=$sql.$userinformation[$i].",";
-    }
-    $sql=$sql.")";
-    //执行语句反馈结果    
-    if($this->conn->query($sql)===TRUE){
-      return true;
-    }else{
-     return false;
-    }
+
+public function adduser($userinformation) {
+        // 准备SQL插入语句
+        $sql = "INSERT INTO user (username, password, name, main, membars, teams, teamposltion, friends, activity,usertype,id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        // 准备预处理语句
+        $stmt = $this->conn->prepare($sql);
+        
+        if (!$stmt) {
+            // 如果预处理语句准备失败，返回错误信息
+            feedback($this->conn->error);
+        }
+
+        // 绑定参数
+        $params = [
+            $userinformation[0],
+            $userinformation[1],
+            $userinformation[2],
+            $userinformation[3],
+            $userinformation[4],
+            $userinformation[5],
+            $userinformation[6],
+            $userinformation[7],
+            $userinformation[8],
+            $userinformation[9],
+            $userinformation[10],
+        ];
+
+        // 使用call_user_func_array绑定参数
+        $types = str_repeat('s', count($params));
+        call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $params));
+
+        // 执行预处理语句
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            // 获取更详细的错误信息
+            return false;
+        }
 }
- public function getUserinformation($username,$password){
-    $sql= 'SELECT * FROM user WHERE username='.$username.'AND password='.$password;
-    $stmt = $this->conn->prepare($sql);   
+
+public function getLastUserId() {
+    // 查询 user 表中的最大 id
+    $sql = "SELECT MAX(id) AS last_id FROM user";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+      // 输出数据
+      $row = $result->fetch_assoc();
+      return $row['last_id'];
+    } else {
+      return null;
+    }
+
+    // 关闭连
+  }
+
+  public function getUserByUsername($username) {
+    // 构建 SQL 查询语句
+    $sql = "SELECT username, password, name, main, membars,usertype, teams, teamposltion, activity, friends, id ,userfile FROM user WHERE username = ?";
+
+    // 准备 SQL 语句
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception("Prepare failed: " . $this->conn->error);
+    }
+
+    // 绑定参数并执行
+    $stmt->bind_param("s", $username);
     $stmt->execute();
+
+    // 获取结果
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-    $GLOBALS['user'][]=$row;
+
+    // 关闭语句
+    $stmt->close();
+
+    // 如果没有找到用户，返回空数组
+    if (!$row) {
+        return [];
+    }
+
+    // 构造返回数组
+    $userInformation = [
+        $row['username'],
+        $row['password'],
+        $row['name'],
+        $row['main'],
+        $row['membars'], // 假设 usertype 列可能存在
+        $row['usertype'],
+        $row['teamposltion'],
+        $row['activity'],
+        $row['teams'],
+        $row['friends'],
+        $row['id'],
+        $row['userfile'], 
+    ];
+
+    return $userInformation;
 }
 
  public function addFate(){}
