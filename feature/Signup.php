@@ -21,9 +21,9 @@ function post($data) {
     $num = $user->getSginuserinformation();
     $mysqlHandler = new Sql;
     if ($mysqlHandler->adduser($num)) {
-        feedback('success: 注册成功');
+        feedback('success: Signup successful');
     } else {
-        feedback('error:注册失败'); 
+        feedback('error:Signup failed'); 
     }
 }
 ?>

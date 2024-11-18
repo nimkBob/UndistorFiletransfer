@@ -155,7 +155,7 @@ public function adduser($userinformation) {
 public function getLastUserId() {
     // 查询 user 表中的最大 id
     $sql = "SELECT MAX(id) AS last_id FROM user";
-    $result = $conn->query($sql);
+    $result = $this->conn->query($sql);
 
     if ($result->num_rows > 0) {
       // 输出数据
@@ -170,7 +170,7 @@ public function getLastUserId() {
 
   public function getUserByUsername($username) {
     // 构建 SQL 查询语句
-    $sql = "SELECT username, password, name, main, membars,usertype, teams, teamposltion, activity, friends, id ,userfile FROM user WHERE username = ?";
+    $sql = "SELECT username, password, name, main, membars,usertype, teams, teamposltion, activity, friends, id,userfile FROM user WHERE username = ?";
 
     // 准备 SQL 语句
     $stmt = $this->conn->prepare($sql);

@@ -5,6 +5,7 @@ $data=json_decode($rawData,true);
 switch($data['featureType']){
     case "Login":
      include 'feature/Login.php';
+     login($data['username'],$data['password']);
      break;
     case 'Signup':
      include 'feature/Signup.php';

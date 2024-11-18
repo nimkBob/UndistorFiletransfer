@@ -12,11 +12,11 @@
  function validate($value,$maxlen,$minlen){//检验用户上传数据的合法性
     //注册验证用户的输入是否合法
     if(!(isAlphanumeric($value)) and $value==null){
-      feedback("error:Characters-do-not-meet-requirements");
+      feedback("error: invalid value");
       return false;
    }
     if(strlen($value)>$maxlen || strlen($value)<$minlen){
-      feedback("error:The-length-does-not-meet-the-requirements");
+      feedback("error:length-error");
       return false;
     }
     return true;

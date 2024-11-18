@@ -59,20 +59,20 @@ class User{
      return $num;
   }
 
-  public function getLoginUserInformation2(){
+  public function getLoginUserInformation(){
     $num=[
      'username'=>$this->username,
-     $this->password,
-     $this->name,
-     $this->main,
-     $this->membars,
-     $this->teams,
-     $this->teamposltion,
-     $this->friends,
-     $this->activity,
-     $this->usertype, 
-     $this->id,
-     $this->userfile,
+     'password'=>$this->password,
+     'name'=>$this->name,
+     'main'=>$this->main,
+     'membars'=>$this->membars,
+     'teams'=>$this->teams,
+     'teamposltion'=>$this->teamposltion,
+     'friends'=>$this->friends,
+     'usertype'=>$this->usertype,
+     'activity'=>$this->activity,
+     'id'=>$this->id,
+     'userfile'=>$this->userfile,
  ];
      return $num;
   }
@@ -85,12 +85,12 @@ class User{
     $this->main =$userlogininput[3];//-
     $this->membars=$userlogininput[4];
     $this->usertype=$userlogininput[5];
-    $this->teamposltion = $userlogininput[7];
-    $this->activity =$userlogininput[8];
-    $this->teams=$userlogininput[9];
-    $this->friends=$userlogininput[10];
-    $this->id=$userlogininput[11];  
-    $this->userfile=$userlogininput[12];
+    $this->teamposltion = $userlogininput[6];
+    $this->activity =$userlogininput[7];
+    $this->teams=$userlogininput[8];
+    $this->friends=$userlogininput[9];
+    $this->id=$userlogininput[10];  
+    $this->userfile=$userlogininput[11];
   }
 
   
