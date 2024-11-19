@@ -19,6 +19,7 @@ function post($data) {
     $user = new User;
     $user->setSignup($userInfo);
     $num = $user->getSginuserinformation();
+    unset($user);
     $mysqlHandler = new Sql;
     if ($mysqlHandler->adduser($num)) {
         feedback('success: Signup successful');

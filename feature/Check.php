@@ -24,7 +24,6 @@
 
   function isExist($name){
     //检测该用户账号是否已存在
-    include "Mysql.php";
     $feedbackValue = new Sql();
     if($feedbackValue->checkExistence($name, 'username', 'user')){
       feedback("error:The-named-user-already-exists");
@@ -34,7 +33,6 @@
   }
 
   function checkFloderDownloadPower($targetFileId,$userId){
-    include 'Mysql.php'; 
     $feedbackValue = new Sql();
     if(!($feedbackValue->checkFloderDownloadPower($targetFileId, $userId))){
         return false;

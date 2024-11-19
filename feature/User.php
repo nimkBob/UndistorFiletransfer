@@ -39,7 +39,9 @@ class User{
     $this->teams="0;";
     $this->friends="0;";
     $this->usertype=$userSginupinput[5];
-    $this->id=getLastUserId()+1;
+    $temp=new Sql;
+    $this->id=$temp->getLastUserId()+1;
+    unset($temp);
   }
 
   public function getSginUserInformation(){
