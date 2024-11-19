@@ -113,8 +113,8 @@ public function checkEquality($testValue, $columnName, $noun, $noumName, $table)
 
 public function adduser($userinformation) {
         // 准备SQL插入语句
-        $sql = "INSERT INTO user (username, password, name, main, membars, teams, teamposltion, friends, activity,usertype,id) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (username, password, name, main, membars, teams, teamposltion, friends, activity, usertype, id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         
         // 准备预处理语句
         $stmt = $this->conn->prepare($sql);

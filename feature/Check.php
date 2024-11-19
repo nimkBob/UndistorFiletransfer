@@ -16,7 +16,6 @@
       return false;
    }
     if(strlen($value)>$maxlen || strlen($value)<$minlen){
-      feedback("error:length-error");
       return false;
     }
     return true;

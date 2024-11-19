@@ -1,4 +1,4 @@
-<<?php
+<?php
 
 include 'Mysql.php';
 include 'Check.php';

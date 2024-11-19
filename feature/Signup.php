@@ -14,8 +14,10 @@ function post($data) {
     ];
     // 检查用户名和密码的合法性
    if (!(validate($userInfo[0], 20, 6)  && validate($userInfo[1], 20, 10))) {
-        exit();  
-    }
+        exit();  }
+if (!(isExist($userInfo[0]))){
+    feedback('error:username already exists');
+}
     $user = new User;
     $user->setSignup($userInfo);
     $num = $user->getSginuserinformation();
