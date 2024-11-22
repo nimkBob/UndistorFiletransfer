@@ -5,7 +5,7 @@ $data=json_decode($rawData,true);
 switch($data['featureType']){
     case "Login":
      include 'feature/Login.php';
-     login($data['username'],$data['password']);
+     login($data['username'],$data['password'],'-f');
      break;
     case 'Signup':
      include 'feature/Signup.php';
@@ -14,6 +14,10 @@ switch($data['featureType']){
     case "File-operation":
      include 'feature/File-operation.php';
      break;
+    case 'getFiles':
+        include 'feature/upload.php';
+        getfile($data);
+        break;
     case "Outside-interface":
      include 'feature/Outside-interface.php';
      break;

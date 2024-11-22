@@ -113,7 +113,7 @@ public function checkEquality($testValue, $columnName, $noun, $noumName, $table)
 
 public function adduser($userinformation) {
         // 准备SQL插入语句
-        $sql = "INSERT INTO user (username, password, name, main, membars, teams, teamposltion, friends, activity, usertype, id) 
+        $sql = "INSERT INTO user (username, password, name, main, membars, teams, teamposltion, friends, activity,usertype,id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         
         // 准备预处理语句
@@ -156,8 +156,7 @@ public function getLastUserId() {
     // 查询 user 表中的最大 id
     $sql = "SELECT MAX(id) AS last_id FROM user";
     $result = $this->conn->query($sql);
-
-    if ($result->num_rows > 0) {
+    if ($result->num_rows > 0) {   
       // 输出数据
       $row = $result->fetch_assoc();
       return $row['last_id'];
@@ -211,6 +210,111 @@ public function getLastUserId() {
     ];
 
     return $userInformation;
+}
+
+
+//文件相关
+function getMaxIdFromFdata() {
+    // SQL 查询语句
+    $sql = "SELECT MAX(id) AS max_id FROM Fdata";
+
+    // 执行查询
+    $result = $this->conn->query($sql);
+
+    if ($result === FALSE) {
+        // 如果查询失败，记录错误信息并返回 null
+        error_log("Query failed: " . $this->conn->error);
+        return null;
+    }
+
+    // 获取查询结果的第一行
+    $row = $result->fetch_assoc();
+
+    // 关闭结果集
+    $result->free();
+
+    // 返回最大 id 值，如果没有数据则返回 null
+    return isset($row['max_id']) ? $row['max_id'] : null;
+}
+
+
+public function addFile($fileinformation) {
+    // 连接数据库
+    if ($this->conn->connect_error) {
+        die("连接失败: " . $this->conn->connect_error);
+    }
+
+    // 准备 SQL 语句
+    $stmt = $this->conn->prepare("INSERT INTO Fdate (id, Fdatename, admins, sonfiles, users, files, hintinformation, starttime, endtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        die("准备语句失败: " . $this->conn->error);
+    }
+
+    // 绑定参数
+    $stmt->bind_param("issssssss", 
+        $fileinformation['id'], 
+        $fileinformation['Fdatename'], 
+        $fileinformation['admins'], 
+        $fileinformation['sonfiles'], 
+        $fileinformation['users'], 
+        $fileinformation['files'], 
+        $fileinformation['hintinformation'], 
+        $fileinformation['starttime'], 
+        $fileinformation['endtime']
+    );
+
+    // 执行插入操作
+    if ($stmt->execute()) {
+        $result = true;
+    } else {
+        $result=false;
+    }
+
+    // 关闭连接
+    $stmt->close();
+
+    return $result;
+}
+
+public function setTargetFdata($targetid, $id) {
+    // 查询当前的sonfiles值
+    $sql = "SELECT sonfiles FROM Fdate WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+        die("准备语句失败: " . $this->conn->error);
+    }
+
+    $stmt->bind_param("i", $targetid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if ($row) {
+        // 获取当前的sonfiles值
+        $currentSonfiles = $row['sonfiles'];
+
+        // 更新sonfiles值
+        $newSonfiles = $currentSonfiles ? $currentSonfiles . $id . ';' : $id . ';';
+
+        // 更新数据库
+        $updateSql = "UPDATE Fdate SET sonfiles = ? WHERE id = ?";
+        $updateStmt = $this->conn->prepare($updateSql);
+        if (!$updateStmt) {
+            return false;
+        }
+
+        $updateStmt->bind_param("si", $newSonfiles, $targetid);
+        $updateResult = $updateStmt->execute();
+
+        // 关闭语句
+        $updateStmt->close();
+        $stmt->close();
+
+        return true;
+    } else {
+        // 如果没有找到目标记录，返回false
+        return false;
+    }
 }
 
  public function addFate(){}
